@@ -16,3 +16,5 @@ connection = mysql.connector.connect(
 )
 
 def startgame:
+
+juho
