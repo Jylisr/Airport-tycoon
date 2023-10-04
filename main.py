@@ -16,3 +16,7 @@ connection = mysql.connector.connect(
 )
 
 def startgame:
+    print("Welcome to Airport Tycoon!")
+    print("[]")
+
+def gameintro:
