@@ -52,3 +52,8 @@ def high_score(highscore_list):
     for i in range(5):
         print(highscore_list[i])
 
+#main
+player_name = start_game() #game starts
+player_table = fetch_players() #players list is retrieved
+name_check(player_name, player_table) # name checked and name is added to database
+high_score(player_name) #high score is printed
