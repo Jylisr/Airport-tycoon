@@ -49,3 +49,13 @@ def fetch_players(cursor) -> List[RowType]:
     # print(highscore_list)
     # print("DEBUG: game table end")
     return highscore_list
+
+
+def write_score(cursor):  # TODO
+    pass
+
+
+def get_random_airport(cursor):
+    query = """
+
+    """

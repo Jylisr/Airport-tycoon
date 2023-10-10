@@ -43,9 +43,11 @@ class GameState:
         # check player name not reserved, and use the name
         self.get_name()
         # game variables
-        self.player_score: int = 0
+        self.player_score = 0
         self.game_time_limit = datetime.time(minute=5)
         self.player_owned_properties: list[str] = []
+        self.co2_budget = 10_000
+        self.current_airport = ""
 
     def try_to_connect(self):
         try:
@@ -74,7 +76,19 @@ class GameState:
         # buy?
         # fly?
         # auction?
-        #
+        choice = str(
+            input(
+                """
+What do you want to do now?
+(F)ly
+"""
+            )
+        )
+        match choice:
+            case "f" | "F":
+                self.fly_to("location")
+
+    def fly_to(self, location):
         pass
 
     def print_high_score(self):
@@ -98,6 +112,9 @@ class GameState:
                 print("Looks like you've already attempted the tycoon life")
                 print("(Player with that name already played, choose a new name.)")
 
+    def place_player_in_random_airport(self):
+        self.location = database.get_random_airport()
+
 
 def main():
     print("Welcome to Airport Tycoon!")
@@ -105,9 +122,20 @@ def main():
     print("I see the spirit of a future tycoon in you.")
 
     # # # Intro loop
-    game_state = GameState()
+    game = GameState()
 
     # # # Game loop
+
+    # spawn in random airport; have co2_budget; have money
+    # goto to airports nearby; costs co2
+    # buy shops in airports; or end early; costs money
+    # "simulate" a year of operation => calculate score + add unspent money
+
+    # shop data:
+    #   price
+    #   revenue generation
+    #   name
+
     while True:
         break
         # show time cost
