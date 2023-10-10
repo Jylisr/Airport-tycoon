@@ -110,7 +110,7 @@ What do you want to do now?
                 break
             else:
                 print("Looks like you've already attempted the tycoon life")
-                print("(Player with that name already played, choose a new name.)")
+                print("(Player with that name has already played, choose a new name.)")
 
     def place_player_in_random_airport(self):
         self.location = database.get_random_airport()
