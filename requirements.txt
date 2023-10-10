@@ -1,2 +1,1 @@
-inquirer
 mysql-connector-python

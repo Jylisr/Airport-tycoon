@@ -70,7 +70,7 @@ def get_name(cursor, player_table):
             return name
         else:
             print("Looks like you've already attempted the tycoon life")
-            print("(Player with that name already played, choose a new name.)")
+            print("(Player with that name has already played, choose a new name.)")
 
 
 def place_player_in_random_airport(cursor):
