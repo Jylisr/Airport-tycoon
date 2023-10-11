@@ -82,3 +82,9 @@ def write_score(cursor, player_name, score):
     query = f"""
 update game set score = {int(score)} where screen_name = "{player_name}";
 """
+
+
+def get_random_airport(cursor, airports):
+    import random
+    ranair = random.randint(0, len(airports))
+    return airports[ranair]

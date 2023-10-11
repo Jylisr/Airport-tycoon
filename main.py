@@ -103,7 +103,7 @@ def fly_to(location, co2_budget):
 
 
 
-def buy():
+def buy(player_owned_properties, player_money=None):
     #Loop
 
         def generate_random_shop(shop_names):
@@ -138,6 +138,7 @@ def buy():
                         print(f"You chose not to buy {shop_name}")
                 else:
                     print("You don't have enough money to buy this shop.")
+        return player_owned_properties
 
 
 def ask_for_decision():
@@ -158,16 +159,18 @@ What do you want to do now?
 
 
 
-def print_high_score(self):
+def print_high_score(player_table):
     print("Let me show you the people that have left their mark here already")
     print("Name, Score, Time")
     for i in range(5):
-        print(f"{self.player_table[i][4]}, Score here, Time here")
+        print(f"{player_table[i][4]}, Score here, Time here")
 
-def place_player_in_random_airport(cursor):
-    return database.get_random_airport(cursor)
+def place_player_in_random_airport(cursor, airports, player_name):
+    PlInRanAir = database.get_random_airport(cursor, airports)
+    print(f"{player_name}, you are in {PlInRanAir[0]}")
+    return PlInRanAir
 
-def exitgame():
+def exitgame(co2_budget):
     if co2_budget <= 0:
         return True
     else:
@@ -199,9 +202,13 @@ def main():
     print("You have now entered the wonderful world of airportopia.")
     print("I see the spirit of a future tycoon in you.")
     player_name = get_name(cursor, player_table)
+    print_high_score(player_table)
+    PlInRanAir = place_player_in_random_airport(cursor, airports, player_name)
+    current_airport = PlInRanAir[0]
     # check player name not reserved, and use the name
 
     while True:
+
 
     # # # Intro loop
     # game = GameState()
