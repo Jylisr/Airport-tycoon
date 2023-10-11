@@ -88,7 +88,7 @@ def calculate_distance_between_airports(icao1, icao2):
         return None
 
 
-def fly_to(airports, current_airport, location, co2_budget):
+def fly_to(airports, current_airport, location, co2_budget, co2_consumed):
     CO2_KG_USED_PER_KM_FLOWN = 0.133
     print("Current CO2 Budget: {} KG".format(co2_budget))
     table_of_airport_names_for_id_extraction = []
@@ -102,7 +102,7 @@ def fly_to(airports, current_airport, location, co2_budget):
     distance = calculate_distance_between_airports(icao1, icao2)
 
     if distance is not None:
-        co2_consumed = distance * CO2_KG_USED_PER_KM_FLOWN
+        co2_consumed += distance * CO2_KG_USED_PER_KM_FLOWN
         if co2_consumed <= co2_budget:
             co2_budget -= co2_consumed
             print(
@@ -111,7 +111,7 @@ def fly_to(airports, current_airport, location, co2_budget):
             print(f"Distance: {distance:.2f} kilometers")
             print(f"CO2 Consumed: {co2_consumed:.2f} kilograms")
             print(f"Remaining CO2 Budget: {co2_budget:.2f} kilograms")
-            return (location, co2_budget)
+            return (location, co2_budget, co2_consumed)
         else:
             print("You don't have enough CO2 budget for this flight.")
     else:
@@ -210,6 +210,7 @@ def main():
     game_time_limit = datetime.time(minute=5)
     player_owned_properties = []
     co2_budget = 10_000
+    co2_consumed = 0
     current_airport = ""
     player_money = 10_000
     print("Welcome to Airport Tycoon!")
@@ -247,6 +248,7 @@ def main():
                 result = fly_to(airports, current_airport, location, co2_budget)
                 current_airport = result[0]
                 co2_budget = result[1]
+                co2_consumed = result[2]
 
             case "b" | "B":
                 shop_choice = int(input("Which shop would you like to buy? "))
