@@ -135,9 +135,9 @@ def main():
     # game variables
 
     player_score = 0
-    game_time_limit = datetime.time(minute=5)
     player_owned_properties: list[str] = []
     co2_budget = 10_000
+    money_budget=10_000
     current_airport = ""
 
     # # # Game loop
