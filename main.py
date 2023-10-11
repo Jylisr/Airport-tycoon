@@ -31,6 +31,7 @@ def name_check(name, some_list) -> bool:
         if i[4] == name:
             return False
     return True
+
 def calculate_distance_between_airports(icao1, icao2):
     from geopy.distance import geodesic
     coords1 = get_airport_coordinates(icao1)
