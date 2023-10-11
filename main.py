@@ -101,61 +101,34 @@ def fly_to(location, co2_budget):
         else:
             print("Distance calculation failed. Please check the ICAO codes and ensure they exist in the database.")
 
+def generate_random_shop(shop_names):
+    num_shops = random.randint(0, 7)
+    shop_names = ["Duty-Free Shop", "Coffee House", "Electronics Store", "Bookstore", "Gift Shop",
+                  "Fashion Boutique", "Restaurant"]
+    name = random.choice(shop_names)
+    print("Buy Shops:")
+    list_of_shops = []
+    for _ in range(num_shops):
+        name = random.choice(shop_names)
+        price = random.randint(1000, 8000)
+        revenue_per_month = random.randint(1000, 5000)
+        list_of_shops.append([name, price, revenue_per_month])
+    return list_of_shops
 
-
-def buy(player_owned_properties, player_money=None):
-    #Loop
-
-        def generate_random_shop(shop_names):
-            name = random.choice(shop_names)
-            price = random.randint(1000, 10000)
-            revenue_per_month = random.randint(1000, 5000)
-            return name, price, revenue_per_month
-
-        # Loop
-        while True:
-            shop_names = ["Duty-Free Shop", "Coffee House", "Electronics Store", "Bookstore", "Gift Shop",
-                          "Fashion Boutique"]
-            num_shops = random.randint(1, 5)
-            print("Buy Shops:")
-            for _ in range(num_shops):
-                shop_name, acquisition_price, revenue_per_month = generate_random_shop(shop_names)
-                print(f"Shop Name: {shop_name}")
-                print(f"Acquisition Price: {acquisition_price}")
-                print(f"Revenue per month: {revenue_per_month}")
+def buy(list_of_shops, player_money):
 
                 # Appends the player money and owned property names in player_owned_properties list upon yes decision.
-                if player_money >= acquisition_price:
-                    buy_decision = input("Do you want to buy this shop? (Yes/No):")
-                    if buy_decision.lower() == "yes":
-                        player_money -= acquisition_price
-                        player_owned_properties.append({
-                            "name": shop_name,
-                            "revenue": revenue_per_month
-                        })
-                        print(f"Congratulations! You bought {shop_name} for ${acquisition_price}.")
-                    else:
-                        print(f"You chose not to buy {shop_name}")
-                else:
-                    print("You don't have enough money to buy this shop.")
-        return player_owned_properties
+    if player_money >= list_of_shops[1]:
+        buy_decision = input("Do you want to buy this shop? (Yes/No):")
+        if buy_decision.lower() == "yes":
+                player_money -= list_of_shops[1]
+                print(f"Congratulations! You bought {list_of_shops[0]} for ${list_of_shops[1]}.")
+                return list_of_shops
+        else:
+            print(f"You chose not to buy {list_of_shops[0]}")
+    else:
+        print("You don't have enough money to buy this shop.")
 
-
-def ask_for_decision():
-    # buy?
-    # fly?
-    # auction?
-    choice = str(
-        input(
-            """
-What do you want to do now?
-(F)ly
-"""
-        )
-    )
-    match choice:
-        case "f" | "F":
-            fly_to("location")
 
 
 
@@ -203,11 +176,34 @@ def main():
     print("I see the spirit of a future tycoon in you.")
     player_name = get_name(cursor, player_table)
     print_high_score(player_table)
-    PlInRanAir = place_player_in_random_airport(cursor, airports, player_name)
-    current_airport = PlInRanAir[0]
+    PlInAir = place_player_in_random_airport(cursor, airports, player_name)
+    current_airport = PlInAir[0]
     # check player name not reserved, and use the name
 
     while True:
+        print(f"{player_name}, you are in {current_airport}")
+        print(f"You have ${player_money} left, and {co2_budget} co2 left")
+        list_of_shops = generate_random_shop()
+        print(list_of_shops)
+        choice = str(input ("""
+        What would you like to do now?
+        (F)ly to a different airport
+        (B)uy a shop at this airport
+        (E)xit game
+            """
+        ))
+        match choice:
+            case "f" | "F":
+                print()
+                location = input("Where would you like to go? ")
+                fly_to()
+            case "b" | "B":
+                input("Which shop would you like to buy? ")
+                player_owned_properties.append(buy(player_owned_properties, list_of_shops, player_money))
+                print(f"Congratulations! You have purchased ")
+            case "e" | "E":
+                break
+
 
 
     # # # Intro loop
