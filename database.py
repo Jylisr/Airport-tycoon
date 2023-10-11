@@ -69,7 +69,7 @@ def fetch_players(cursor) -> List[RowType]:
 
 def fetch_airport(cursor) -> List[RowType]:
     cursor.execute(
-        "select name, latitude_deg, longtitude_deg from airport where type = 'large_airport';"
+        "select name, latitude_deg, longtitude_deg, ident from airport where type = 'large_airport';"
     )
     airports_list = cursor.fetchall()
     # NOTE: debug print whole table

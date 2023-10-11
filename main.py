@@ -31,6 +31,7 @@ def get_name_input() -> str:
     name = str(input("What is your name?: "))
     return name
 
+
 def name_to_table(cursor, name, co2_budget):
     query = f"insert into game(screen_name, co2_budget,co2_consumed) values ('{name}',{co2_budget},0);"
     cursor.execute(query)
@@ -78,12 +79,12 @@ def calculate_distance_between_airports(icao1, icao2):
         return distance
     else:
         return None
-def fly_to(location, co2_budget):
+def fly_to(airports, current_airport, location, co2_budget):
     CO2_KG_USED_PER_KM_FLOWN = 0.133
     while co2_budget > 0:
         print("Current CO2 Budget: {} KG".format(co2_budget))
-        icao1 = input("Enter ICAO code of your current airport: ")
-        icao2 = input("Enter ICAO code of your destination airport: ")
+        icao1 = airports[airports.index(current_airport)][3]
+        icao2 = airports[location][3]
 
         distance = calculate_distance_between_airports(icao1, icao2)
 
@@ -91,7 +92,7 @@ def fly_to(location, co2_budget):
             co2_consumed = distance * CO2_KG_USED_PER_KM_FLOWN
             if co2_consumed <= co2_budget:
                 co2_budget -= co2_consumed
-                print(f"Successfully flew from {icao1} to {icao2}.")
+                print(f"Successfully flew from {current_airport[0]} to {airports[location][0]}.")
                 print(f"Distance: {distance:.2f} kilometers")
                 print(f"CO2 Consumed: {co2_consumed:.2f} kilograms")
                 print(f"Remaining CO2 Budget: {co2_budget:.2f} kilograms")
@@ -99,7 +100,7 @@ def fly_to(location, co2_budget):
                 print("You don't have enough CO2 budget for this flight.")
                 break
         else:
-            print("Distance calculation failed. Please check the ICAO codes and ensure they exist in the database.")
+            print("Distance calculation failed. Please check that you have not visited airport already.")
 
 def generate_random_shop(shop_names):
     num_shops = random.randint(0, 7)
@@ -143,6 +144,10 @@ def place_player_in_random_airport(cursor, airports, player_name):
     print(f"{player_name}, you are in {PlInRanAir[0]}")
     return PlInRanAir
 
+def print_random_airports(airports):
+    for i in range(10):
+        j=random.randrange(0, len(airports))
+        print(j,". ",airports[j][0],sep = "|")
 def exitgame(co2_budget):
     if co2_budget <= 0:
         return True
@@ -194,8 +199,8 @@ def main():
         ))
         match choice:
             case "f" | "F":
-                print()
-                location = input("Where would you like to go? ")
+                print_random_airports(airports)
+                location = input("Enter the serial number of the airport you would like to go to? ")
                 fly_to()
             case "b" | "B":
                 input("Which shop would you like to buy? ")
