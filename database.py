@@ -69,7 +69,7 @@ def fetch_players(cursor) -> List[RowType]:
 
 def fetch_airport(cursor) -> List[RowType]:
     cursor.execute(
-        "select name, latitude_deg, longtitude_deg, ident from airport where type = 'large_airport';"
+        "select name, latitude_deg, longitude_deg, ident from airport where type = 'large_airport';"
     )
     airports_list = cursor.fetchall()
     # NOTE: debug print whole table
@@ -86,5 +86,6 @@ update game set score = {int(score)} where screen_name = "{player_name}";
 
 def get_random_airport(cursor, airports):
     import random
+
     ranair = random.randint(0, len(airports))
     return airports[ranair]
