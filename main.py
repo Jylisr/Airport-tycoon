@@ -37,44 +37,25 @@ def name_to_table(cursor, name):
     cursor.execute(query)
     # goal table changes need to be kept in mind
 
+def name_check(name, some_list) -> bool:
+    for i in some_list:
+        if i[4] == name:
+            return False
+    return True
+
 
 def get_name(cursor, player_table):
     while True:
         name = get_name_input()
         if name_check(name, player_table):
             print("Ah, So you are a rookie.")
-            print("Welcome again to this world")
+            print("Welcome to this world")
             name_to_table(cursor, name)  # name checked and name is added to database
             return name
         else:
             print("Looks like you've already attempted the tycoon life")
             print("(Player with that name has already played, choose a new name.)")
 
-cursor = connection.cursor()
-database.modify_database(cursor)
-# players list is retrieved
-player_table = database.fetch_players(cursor)
-# check player name not reserved, and use the name
-player_name = get_name(cursor, player_table)
-# game variables
-
-airports = database.fetch_airport(cursor)
-player_score = 0
-game_time_limit = datetime.time(minute=5)
-player_owned_properties = []
-co2_budget = 10_000
-current_airport = ""
-player_money = 10_000
-
-
-
-
-
-def name_check(name, some_list) -> bool:
-    for i in some_list:
-        if i[4] == name:
-            return False
-    return True
 
 def calculate_distance_between_airports(icao1, icao2):
     from geopy.distance import geodesic
@@ -114,16 +95,8 @@ def fly_to(location):
 
 
 def buy():
-    def generate_random_shop(shop_names):
-        name = random.choice(shop_names)
-        price = random.randint(1000, 10000)
-        revenue_per_month = random.randint(1000, 5000)
-        return name, price, revenue_per_month
-
     #Loop
-    import random
 
-    def buy():
         def generate_random_shop(shop_names):
             name = random.choice(shop_names)
             price = random.randint(1000, 10000)
@@ -199,9 +172,26 @@ def calculate_final_score(player_money, property_revenues):
     return final_score
 
 def main():
+    cursor = connection.cursor()
+    database.modify_database(cursor)
+    # players list is retrieved
+    player_table = database.fetch_players(cursor)
+
+    # game variables
+
+    airports = database.fetch_airport(cursor)
+    player_score = 0
+    game_time_limit = datetime.time(minute=5)
+    player_owned_properties = []
+    co2_budget = 10_000
+    current_airport = ""
+    player_money = 10_000
     print("Welcome to Airport Tycoon!")
     print("You have now entered the wonderful world of airportopia.")
     print("I see the spirit of a future tycoon in you.")
+    player_name = get_name(cursor, player_table)
+    # check player name not reserved, and use the name
+
     while True:
 
     # # # Intro loop
