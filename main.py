@@ -14,6 +14,8 @@ from typing import Any, List
 
 import database
 
+import random
+
 # connects to database
 connection = mysql.connector.connect(
     host="127.0.0.1",
@@ -23,6 +25,17 @@ connection = mysql.connector.connect(
     password="password",
     autocommit=True,
 )
+
+
+def get_name_input() -> str:
+    name = str(input("What is your name?: "))
+    return name
+
+def name_to_table(cursor, name):
+    co2_budget = 10000
+    query = f"insert into game(screen_name, co2_budget,co2_consumed) values ('{name}',{co2_budget},0);"
+    cursor.execute(query)
+    # goal table changes need to be kept in mind
 
 
 def get_name(cursor, player_table):
@@ -52,16 +65,8 @@ player_owned_properties: list[str] = []
 co2_budget = 10_000
 current_airport = ""
 
-def get_name_input() -> str:
-    name = str(input("What is your name?: "))
-    return name
 
 
-def name_to_table(cursor, name):
-    co2_budget = 10000
-    query = f"insert into game(screen_name, co2_budget,co2_consumed) values ('{name}',{co2_budget},0);"
-    cursor.execute(query)
-    # goal table changes need to be kept in mind
 
 
 def name_check(name, some_list) -> bool:
@@ -105,6 +110,35 @@ def fly_to(location):
         else:
             print("Distance calculation failed. Please check the ICAO codes and ensure they exist in the database.")
 
+
+
+def buy():
+    def generate_random_shop(shop_names):
+        name = random.choice(shop_names)
+        price = random.randint(1000, 10000)
+        revenue_per_month = random.randint(1000, 5000)
+        return name, price, revenue_per_month
+
+    #Loop
+    while True:
+        shop_names = ["Duty-Free Shop","Coffee House","Electronics Store","Bookstore","Gift Shop","Fashion Botique"]
+        num_shops = random.randint(1,5)
+        print("Buy Shops:")
+        for _ in range(num_shops):
+            shop_name, acquisition_price, revenue_per_month = generate_random_shop(shop_names)
+            print(f"Shop Name: {shop_name}")
+            print(f"Acquisition Price: {acquisition_price}")
+            print(f"Revenue per month: {revenue_per_month}")
+
+            if player_money >= acquisition_price:
+                buy_decision = input("Do you want to buy this shop? (Yes/No):")
+                if buy_decision.lower() == "yes":
+                    player_money -= acquisition_price
+                    print(f"Congratulations! You bought {shop_name} for ${acquisition_price}").
+                else:
+                    print(f"You chose not to buy {shop_name}")
+            else:
+                print("You dont have enough money to buy this shop. ")
 
 def ask_for_decision():
     # buy?
