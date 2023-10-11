@@ -55,6 +55,16 @@ def get_name(cursor, player_table):
             print("Looks like you've already attempted the tycoon life")
             print("(Player with that name has already played, choose a new name.)")
 
+def get_airport_coordinates(icao):
+    sql = "SELECT latitude_deg, longitude_deg FROM airport WHERE ident = %s"
+    cursor = connection.cursor()
+    cursor.execute(sql, (icao,))
+    result = cursor.fetchone()
+    if result:
+        return result
+    else:
+        print(f"Airport with ICAO code {icao} not found in the database.")
+        return None
 
 def calculate_distance_between_airports(icao1, icao2):
     from geopy.distance import geodesic
