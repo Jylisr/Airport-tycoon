@@ -61,9 +61,10 @@ player_name = get_name(cursor, player_table)
 airports = database.fetch_airport(cursor)
 player_score = 0
 game_time_limit = datetime.time(minute=5)
-player_owned_properties: list[str] = []
+player_owned_properties = []
 co2_budget = 10_000
 current_airport = ""
+player_money = 10_000
 
 
 
@@ -120,25 +121,42 @@ def buy():
         return name, price, revenue_per_month
 
     #Loop
-    while True:
-        shop_names = ["Duty-Free Shop","Coffee House","Electronics Store","Bookstore","Gift Shop","Fashion Botique"]
-        num_shops = random.randint(1,5)
-        print("Buy Shops:")
-        for _ in range(num_shops):
-            shop_name, acquisition_price, revenue_per_month = generate_random_shop(shop_names)
-            print(f"Shop Name: {shop_name}")
-            print(f"Acquisition Price: {acquisition_price}")
-            print(f"Revenue per month: {revenue_per_month}")
+    import random
 
-            if player_money >= acquisition_price:
-                buy_decision = input("Do you want to buy this shop? (Yes/No):")
-                if buy_decision.lower() == "yes":
-                    player_money -= acquisition_price
-                    print(f"Congratulations! You bought {shop_name} for ${acquisition_price}").
+    def buy():
+        def generate_random_shop(shop_names):
+            name = random.choice(shop_names)
+            price = random.randint(1000, 10000)
+            revenue_per_month = random.randint(1000, 5000)
+            return name, price, revenue_per_month
+
+        # Loop
+        while True:
+            shop_names = ["Duty-Free Shop", "Coffee House", "Electronics Store", "Bookstore", "Gift Shop",
+                          "Fashion Boutique"]
+            num_shops = random.randint(1, 5)
+            print("Buy Shops:")
+            for _ in range(num_shops):
+                shop_name, acquisition_price, revenue_per_month = generate_random_shop(shop_names)
+                print(f"Shop Name: {shop_name}")
+                print(f"Acquisition Price: {acquisition_price}")
+                print(f"Revenue per month: {revenue_per_month}")
+
+                # Appends the player money and owned property names in player_owned_properties list upon yes decision.
+                if player_money >= acquisition_price:
+                    buy_decision = input("Do you want to buy this shop? (Yes/No):")
+                    if buy_decision.lower() == "yes":
+                        player_money -= acquisition_price
+                        player_owned_properties.append({
+                            "name": shop_name,
+                            "revenue": revenue_per_month
+                        })
+                        print(f"Congratulations! You bought {shop_name} for ${acquisition_price}.")
+                    else:
+                        print(f"You chose not to buy {shop_name}")
                 else:
-                    print(f"You chose not to buy {shop_name}")
-            else:
-                print("You dont have enough money to buy this shop. ")
+                    print("You don't have enough money to buy this shop.")
+
 
 def ask_for_decision():
     # buy?
@@ -164,8 +182,6 @@ def print_high_score(self):
     for i in range(5):
         print(f"{self.player_table[i][4]}, Score here, Time here")
 
-
-
 def place_player_in_random_airport(cursor):
     return database.get_random_airport(cursor)
 
@@ -174,6 +190,13 @@ def exitgame():
         return True
     else:
         return False
+
+def calculate_final_score(player_money, property_revenues):
+    total_revenue = 0
+    for property in property_revenues:
+        total_revenue += property ['revenue'] * 12
+    final_score = total_revenue + player_money
+    return final_score
 
 def main():
     print("Welcome to Airport Tycoon!")
