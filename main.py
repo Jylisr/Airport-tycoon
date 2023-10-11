@@ -31,8 +31,7 @@ def get_name_input() -> str:
     name = str(input("What is your name?: "))
     return name
 
-def name_to_table(cursor, name):
-    co2_budget = 10000
+def name_to_table(cursor, name, co2_budget):
     query = f"insert into game(screen_name, co2_budget,co2_consumed) values ('{name}',{co2_budget},0);"
     cursor.execute(query)
     # goal table changes need to be kept in mind
@@ -69,7 +68,7 @@ def calculate_distance_between_airports(icao1, icao2):
         return distance
     else:
         return None
-def fly_to(location):
+def fly_to(location, co2_budget):
     CO2_KG_USED_PER_KM_FLOWN = 0.133
     while co2_budget > 0:
         print("Current CO2 Budget: {} KG".format(co2_budget))
