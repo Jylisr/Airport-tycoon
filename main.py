@@ -20,7 +20,8 @@ def get_name_input() -> str:
 
 
 def name_to_table(cursor, name):
-    query = f"insert into game(screen_name) values ('{name}');"
+    co2_budget = 10000
+    query = f"insert into game(screen_name, co2_budget,co2_consumed) values ('{name}',{co2_budget},0);"
     cursor.execute(query)
     # goal table changes need to be kept in mind
 
@@ -30,6 +31,40 @@ def name_check(name, some_list) -> bool:
         if i[4] == name:
             return False
     return True
+def calculate_distance_between_airports(icao1, icao2):
+    from geopy.distance import geodesic
+    coords1 = get_airport_coordinates(icao1)
+    coords2 = get_airport_coordinates(icao2)
+    if coords1 and coords2:
+        # Create geodesic objects using the coordinates
+        airport1_coords = (coords1[0], coords1[1])
+        airport2_coords = (coords2[0], coords2[1])
+        distance = geodesic(airport1_coords, airport2_coords).kilometers
+        return distance
+    else:
+        return None
+def fly_to(location):
+    CO2_KG_USED_PER_KM_FLOWN = 0.133
+    while co2_budget > 0:
+        print("Current CO2 Budget: {} KG".format(co2_budget))
+        icao1 = input("Enter ICAO code of your current airport: ")
+        icao2 = input("Enter ICAO code of your destination airport: ")
+
+        distance = calculate_distance_between_airports(icao1, icao2)
+
+        if distance is not None:
+            co2_consumed = distance * CO2_KG_USED_PER_KM_FLOWN
+            if co2_consumed <= co2_budget:
+                co2_budget -= co2_consumed
+                print(f"Successfully flew from {icao1} to {icao2}.")
+                print(f"Distance: {distance:.2f} kilometers")
+                print(f"CO2 Consumed: {co2_consumed:.2f} kilograms")
+                print(f"Remaining CO2 Budget: {co2_budget:.2f} kilograms")
+            else:
+                print("You don't have enough CO2 budget for this flight.")
+                break
+        else:
+            print("Distance calculation failed. Please check the ICAO codes and ensure they exist in the database.")
 
 
 def ask_for_decision():
@@ -48,9 +83,6 @@ What do you want to do now?
         case "f" | "F":
             fly_to("location")
 
-
-def fly_to(location):
-    pass
 
 
 def print_high_score(self):
