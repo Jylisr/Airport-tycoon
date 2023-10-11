@@ -8,11 +8,49 @@ Dependencies: mysql.connector
 import datetime
 from sys import exception
 import mysql.connector
+from mysql.connector import cursor
 from mysql.connector.types import RowType
 from typing import Any, List
 
 import database
 
+# connects to database
+connection = mysql.connector.connect(
+    host="127.0.0.1",
+    port=3306,
+    database="flight_game",
+    user="user",
+    password="password",
+    autocommit=True,
+)
+
+
+def get_name(cursor, player_table):
+    while True:
+        name = get_name_input()
+        if name_check(name, player_table):
+            print("Ah, So you are a rookie.")
+            print("Welcome again to this world")
+            name_to_table(cursor, name)  # name checked and name is added to database
+            return name
+        else:
+            print("Looks like you've already attempted the tycoon life")
+            print("(Player with that name has already played, choose a new name.)")
+
+cursor = connection.cursor()
+database.modify_database(cursor)
+# players list is retrieved
+player_table = database.fetch_players(cursor)
+# check player name not reserved, and use the name
+player_name = get_name(cursor, player_table)
+# game variables
+
+airports = database.fetch_airport(cursor)
+player_score = 0
+game_time_limit = datetime.time(minute=5)
+player_owned_properties: list[str] = []
+co2_budget = 10_000
+current_airport = ""
 
 def get_name_input() -> str:
     name = str(input("What is your name?: "))
@@ -93,53 +131,26 @@ def print_high_score(self):
         print(f"{self.player_table[i][4]}, Score here, Time here")
 
 
-def get_name(cursor, player_table):
-    while True:
-        name = get_name_input()
-        if name_check(name, player_table):
-            print("Ah, So you are a rookie.")
-            print("Welcome again to this world")
-            name_to_table(cursor, name)  # name checked and name is added to database
-            return name
-        else:
-            print("Looks like you've already attempted the tycoon life")
-            print("(Player with that name has already played, choose a new name.)")
-
 
 def place_player_in_random_airport(cursor):
     return database.get_random_airport(cursor)
 
+def exitgame():
+    if co2_budget <= 0:
+        return True
+    else:
+        return False
 
 def main():
     print("Welcome to Airport Tycoon!")
     print("You have now entered the wonderful world of airportopia.")
     print("I see the spirit of a future tycoon in you.")
+    while True:
 
     # # # Intro loop
     # game = GameState()
 
-    # connects to database
-    connection = mysql.connector.connect(
-        host="127.0.0.1",
-        port=3306,
-        database="flight_game",
-        user="user",
-        password="password",
-        autocommit=True,
-    )
-    cursor = connection.cursor()
-    database.modify_database(cursor)
-    # players list is retrieved
-    player_table = database.fetch_players(cursor)
-    # check player name not reserved, and use the name
-    player_name = get_name(cursor, player_table)
-    # game variables
 
-    player_score = 0
-    game_time_limit = datetime.time(minute=5)
-    player_owned_properties: list[str] = []
-    co2_budget = 10_000
-    current_airport = ""
 
     # # # Game loop
 
