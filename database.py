@@ -37,8 +37,24 @@ then
 end if
 ;
     """
+    query_add_final_score_field = """
+if not exists (
+    select column_name, column_key
+    from information_schema.columns
+    where
+        table_schema = 'flight_game'
+        and table_name = 'game'
+        and column_name = 'score'
+)
+then
+    alter table game add score int
+;
+end if
+;
+    """
     cursor.execute(query_drop_goal_reached, multi=True)
     cursor.execute(query_make_player_id_auto_inc)
+    cursor.execute(query_add_final_score_field)
 
 
 def fetch_players(cursor) -> List[RowType]:
@@ -50,8 +66,11 @@ def fetch_players(cursor) -> List[RowType]:
     # print("DEBUG: game table end")
     return highscore_list
 
+
 def fetch_airport(cursor) -> List[RowType]:
-    cursor.execute("select name, latitude_deg, longtitude_deg from airport where type = 'large_airport';")
+    cursor.execute(
+        "select name, latitude_deg, longtitude_deg from airport where type = 'large_airport';"
+    )
     airports_list = cursor.fetchall()
     # NOTE: debug print whole table
     # print("DEBUG: airport table start")
@@ -59,12 +78,7 @@ def fetch_airport(cursor) -> List[RowType]:
     return airports_list
 
 
-
-def write_score(cursor):  # TODO
-    pass
-
-
-def get_random_airport(cursor):
-    query = """
-
-    """
+def write_score(cursor, player_name, score):
+    query = f"""
+update game set score = {int(score)} where screen_name = "{player_name}";
+"""
