@@ -53,8 +53,11 @@ end if
 ;
     """
     cursor.execute(query_drop_goal_reached, multi=True)
+    cursor.rownumber = 0
     cursor.execute(query_make_player_id_auto_inc)
+    cursor.rownumber = 0
     cursor.execute(query_add_final_score_field)
+    cursor.rownumber = 0
 
 
 def fetch_players(cursor) -> List[RowType]:

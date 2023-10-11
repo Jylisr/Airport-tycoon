@@ -90,30 +90,34 @@ def calculate_distance_between_airports(icao1, icao2):
 
 def fly_to(airports, current_airport, location, co2_budget):
     CO2_KG_USED_PER_KM_FLOWN = 0.133
-    while co2_budget > 0:
-        print("Current CO2 Budget: {} KG".format(co2_budget))
-        icao1 = airports[airports.index(current_airport)][3]
-        icao2 = airports[location][3]
+    print("Current CO2 Budget: {} KG".format(co2_budget))
+    table_of_airport_names_for_id_extraction = []
+    for a in airports:
+        table_of_airport_names_for_id_extraction.append(a[0])
+    magick = table_of_airport_names_for_id_extraction.index(current_airport)
 
-        distance = calculate_distance_between_airports(icao1, icao2)
+    icao1 = airports[magick][3]
+    icao2 = airports[location][3]
 
-        if distance is not None:
-            co2_consumed = distance * CO2_KG_USED_PER_KM_FLOWN
-            if co2_consumed <= co2_budget:
-                co2_budget -= co2_consumed
-                print(
-                    f"Successfully flew from {current_airport[0]} to {airports[location][0]}."
-                )
-                print(f"Distance: {distance:.2f} kilometers")
-                print(f"CO2 Consumed: {co2_consumed:.2f} kilograms")
-                print(f"Remaining CO2 Budget: {co2_budget:.2f} kilograms")
-            else:
-                print("You don't have enough CO2 budget for this flight.")
-                break
-        else:
+    distance = calculate_distance_between_airports(icao1, icao2)
+
+    if distance is not None:
+        co2_consumed = distance * CO2_KG_USED_PER_KM_FLOWN
+        if co2_consumed <= co2_budget:
+            co2_budget -= co2_consumed
             print(
-                "Distance calculation failed. Please check that you have not visited airport already."
+                f"Successfully flew from {current_airport[0]} to {airports[location][0]}."
             )
+            print(f"Distance: {distance:.2f} kilometers")
+            print(f"CO2 Consumed: {co2_consumed:.2f} kilograms")
+            print(f"Remaining CO2 Budget: {co2_budget:.2f} kilograms")
+            return (location, co2_budget)
+        else:
+            print("You don't have enough CO2 budget for this flight.")
+    else:
+        print(
+            "Distance calculation failed. Please check that you have not visited airport already."
+        )
 
 
 def generate_random_shop():
@@ -235,10 +239,15 @@ def main():
         match choice:
             case "f" | "F":
                 print_random_airports(airports)
-                location = input(
-                    "Enter the serial number of the airport you would like to go to? "
+                location = int(
+                    input(
+                        "Enter the serial number of the airport you would like to go to? "
+                    )
                 )
-                fly_to(airports, current_airport, location, co2_budget)
+                result = fly_to(airports, current_airport, location, co2_budget)
+                current_airport = result[0]
+                co2_budget = result[1]
+
             case "b" | "B":
                 shop_choice = int(input("Which shop would you like to buy? "))
                 result = buy(list_of_shops, player_money, shop_choice)
