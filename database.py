@@ -50,6 +50,15 @@ def fetch_players(cursor) -> List[RowType]:
     # print("DEBUG: game table end")
     return highscore_list
 
+def fetch_airport(cursor) -> List[RowType]:
+    cursor.execute("select name, latitude_deg, longtitude_deg from airport where type = 'large_airport';")
+    airports_list = cursor.fetchall()
+    # NOTE: debug print whole table
+    # print("DEBUG: airport table start")
+    # print("DEBUG: airport table end")
+    return airports_list
+
+
 
 def write_score(cursor):  # TODO
     pass
