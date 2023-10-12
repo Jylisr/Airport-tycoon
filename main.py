@@ -248,7 +248,9 @@ def main():
                         "Enter the serial number of the airport you would like to go to? "
                     )
                 )
-                result = fly_to(airports, current_airport, location, co2_budget)
+                result = fly_to(
+                    airports, current_airport, location, co2_budget, co2_consumed
+                )
                 current_airport = result[0]
                 co2_budget = result[1]
                 co2_consumed = result[2]
