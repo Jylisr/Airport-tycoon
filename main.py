@@ -92,11 +92,13 @@ def fly_to(airports, current_airport, location, co2_budget, co2_consumed):
     CO2_KG_USED_PER_KM_FLOWN = 0.133
     print("Current CO2 Budget: {} KG".format(co2_budget))
     table_of_airport_names_for_id_extraction = []
-    for a in airports:
-        table_of_airport_names_for_id_extraction.append(a[0])
-    magick = table_of_airport_names_for_id_extraction.index(current_airport)
+    for airport in airports:
+        table_of_airport_names_for_id_extraction.append(airport[0])
+    idx_of_current_airport = table_of_airport_names_for_id_extraction.index(
+        current_airport
+    )
 
-    icao1 = airports[magick][3]
+    icao1 = airports[idx_of_current_airport][3]
     icao2 = airports[location][3]
 
     distance = calculate_distance_between_airports(icao1, icao2)
@@ -111,7 +113,7 @@ def fly_to(airports, current_airport, location, co2_budget, co2_consumed):
             print(f"Distance: {distance:.2f} kilometers")
             print(f"CO2 Consumed: {co2_consumed:.2f} kilograms")
             print(f"Remaining CO2 Budget: {co2_budget:.2f} kilograms")
-            return (location, co2_budget, co2_consumed)
+            return (airports[location][0], co2_budget, co2_consumed)
         else:
             print("You don't have enough CO2 budget for this flight.")
     else:
