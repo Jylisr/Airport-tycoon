@@ -1,1 +1,1 @@
-source "./flight_simulator_database_script.sql"
+source "flight_simulator_database_script.sql"

@@ -162,12 +162,15 @@ def print_high_score(player_table):
     print("Let me show you the people that have left their mark here already")
     print("Name, Score, Time")
     for i in range(5):
-        print(
-            player_table[i][4],
-            player_table[i][2],
-            player_table[i][3],
-            sep="|",
-        )
+        try:
+            print(
+                player_table[i][4],
+                player_table[i][2],
+                player_table[i][3],
+                sep="|",
+            )
+        except Exception:
+            continue
 
 
 def place_player_in_random_airport(cursor, airports, player_name):
